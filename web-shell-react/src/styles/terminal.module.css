@@ -1,0 +1,41 @@
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    color: rgb(0, 255, 0);
+    height: 100%;
+    width: 100%;
+}
+
+.content{
+    height: 100%;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    overflow: scroll;
+    justify-content: baseline;
+}
+.terminal{
+    background-color: black;
+    color: rgb(0, 255, 0);
+    display: flex;
+    width: 40%;
+    border: none;
+    flex-wrap: wrap;
+}
+.terminal:focus{
+    outline: none;
+}
+.line{
+    
+display: flex;
+padding: 4px;
+}
+
+.inputtem{
+    width: 100%;
+    margin-top: auto;
+   
+}

@@ -1,0 +1,180 @@
+version: "3.9"
+
+services:
+  discovery-server:
+    container_name: discoveryServer
+    image: 'discovery-server:latest'
+    build:
+      context: ./DiscoveryServer
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761:8761'
+    networks:
+      discovery-server:
+
+  auth-db:
+    container_name: auth_db
+    image: postgres:14.1-alpine
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    ports:
+        - '5432:5432'
+    volumes:
+        - auth-db:/var/lib/postgresql/data
+    networks:
+      auth-db:
+
+  auth-liquibase:
+    container_name: auth-liquibase
+    depends_on:
+      auth-db:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+    image: liquibase/liquibase
+    command: --changeLogFile=/change-log.xml update  --url=jdbc:postgresql://auth-db:5432/postgres --username=postgres --password=postgres
+    volumes:
+      - ./AuthService/src/main/resources/db/change-log.xml:/liquibase/change-log.xml
+      - ./AuthService/src/main/resources/db/entities/:/liquibase/entities/
+    networks:
+      auth-db:
+
+  shell-db:
+    container_name: shell-db
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5431:5431'
+    expose:
+      - '5431:5431'
+    command:
+      - -p 5431
+    volumes:
+      - shell-db:/var/lib/postgresql/data
+    networks:
+      shell-db:
+
+  shell-liquibase:
+    container_name: shell-liquibase
+    depends_on:
+      shell-db:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+    image: liquibase/liquibase
+    command: --changeLogFile=/change-log.xml update  --url=jdbc:postgresql://shell-db:5431/postgres --username=postgres --password=postgres
+    volumes:
+      - ./ShellService/src/main/resources/db/change-log.xml:/liquibase/change-log.xml
+      - ./ShellService/src/main/resources/db/entities/:/liquibase/entities/
+    networks:
+      - shell-db
+
+  shell-service:
+    container_name: shell-service
+    image: 'shell-service:latest'
+    build:
+      context: ./ShellService
+    depends_on:
+      shell-liquibase:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+    networks:
+      discovery-server:
+      shell-db:
+    environment:
+        eureka.client.serviceUrl.defaultZone: http://discovery-server:8761/eureka
+        spring.datasource.url: jdbc:postgresql://shell-db:5431/postgres
+        spring.datasource.username: postgres
+        spring.datasource.password: postgres
+  auth-service:
+    image: 'auth-service:latest'
+    build:
+      context: ./AuthService
+    container_name: auth-service
+    depends_on:
+      auth-liquibase:
+         condition: service_started
+      discovery-server:
+        condition: service_started
+    networks:
+      discovery-server:
+      auth-db:
+
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8761/eureka
+      spring.datasource.url: jdbc:postgresql://auth-db:5432/postgres
+      spring.datasource.username: postgres
+      spring.datasource.password: postgres
+      spring.jpa.hibernate.ddl.auto: none
+      simmo.verification.valid: 1260000
+      simmo.local.address: auth-service
+
+  gateway:
+    container_name: gateway-service
+    image: 'gateway-service:latest'
+    build:
+      context: ./ApiGateway
+    depends_on:
+      auth-service:
+        condition: service_started
+      shell-service:
+        condition: service_started
+    expose:
+      - '8082:8080'
+    environment:
+      spring.application.name: gateway-service
+      server.port: 8080
+      eureka.client.serviceUrl.defaultZone: http://discovery-server:8761/eureka
+      eureka.client.fetch-registry: 'true'
+      eureka.client.register-with-eureka: 'true'
+      eureka.instance.prefer-ip-address: 'true'
+    networks:
+      discovery-server:
+      front:
+        ipv4_address: 172.21.0.5
+
+
+
+  frontend:
+    build:
+      context: ./web-shell-react
+      args:
+        - REACT_APP_HOST_IP_ADDRESS ${REACT_APP_HOST_IP_ADDRESS}
+    command: npm run start
+    container_name: frontend
+    environment:
+      REACT_APP_HOST_IP_ADDRESS: = http://172.21.0.5:8080
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web-shell-react/:/frontend
+      - /frontend/node_modules
+    networks:
+      front:
+    depends_on:
+      gateway:
+        condition: service_started
+
+volumes:
+  auth-db:
+    driver: local
+  shell-db:
+    driver: local
+
+networks:
+  shell-db:
+  auth-db:
+  discovery-server:
+  front:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.21.0.5/24"
+
+
+

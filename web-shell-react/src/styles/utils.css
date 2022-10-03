@@ -1,0 +1,18 @@
+:root{
+--main-bg-color:#F4F1DE;
+
+/* LOGIN PAGE */
+--card-background:#dbdfd4;
+
+
+
+/* BUTTONS */
+--button-font:white;
+--button-font-hover:black;
+--button-border:#b9bab9;
+
+
+/* INPUT COMPPONENT */
+--input-outline :#d0d0d0;
+
+}

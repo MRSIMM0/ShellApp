@@ -1,0 +1,24 @@
+<databaseChangeLog
+
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="4" author="MRSIMM0">
+        <insert tableName="shhclient">
+            <column name="id">2</column>
+            <column name="username">test</column>
+            <column name="user">simmo</column>
+            <column name="port">22</column>
+            <column name="password">qIoLX2QGuCPeDA</column>
+            <column name="host">tty.sdf.org</column>
+            <column name="name">Fist Connection</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

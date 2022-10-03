@@ -1,0 +1,33 @@
+.terminalItem{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    content: "";
+    min-height: 50px;
+    max-height: 50px;
+    background-color: #B0B5B3;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.buttons{
+    font-size: 1.3em;
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button{
+    cursor: pointer;
+}
+.button:hover{
+    cursor: pointer;
+    color: rgb(131, 131, 131);
+}
+
+.button:active{
+    color: black;
+}
+

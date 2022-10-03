@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  ssh-db:
+    container_name: ssh_db
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ssh-db:/var/lib/postgresql/data
+    networks:
+      - ssh-db
+
+  ssh-liquid:
+    container_name: ssh_liquid
+    image: liquibase/liquibase
+    command: --changeLogFile=/change-log.xml update --url=jdbc:postgresql://ssh-db:5432/postgres --username=postgres --password=postgres
+    volumes:
+      - ./src/main/resources/db/change-log.xml:/liquibase/change-log.xml
+      - ./src/main/resources/db/entities/:/liquibase/entities/
+    networks:
+      - ssh-db
+networks:
+   ssh-db:
+volumes:
+  ssh-db:

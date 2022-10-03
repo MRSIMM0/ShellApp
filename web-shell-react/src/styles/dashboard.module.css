@@ -1,0 +1,76 @@
+@import url(./utils.css);
+
+.container{
+    position: absolute;
+    top:0;
+    left: 0;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.logout{
+    cursor: pointer;
+    position: fixed;
+    right: 20px;
+    top:20px;
+    font-size: 2em;
+}
+
+
+.logout:hover{
+    color: rgb(131, 131, 131);
+}
+
+
+.logout:active{
+    color: black;
+}
+
+.left{
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 17%;
+    height: 90%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+.right{
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    align-self: center;
+    height: 80%;
+    min-width: 800px;
+    max-width: 1500px;
+    width: 90%;
+}
+
+
+.terminal{
+    min-width: 800px;
+    max-width: 1500px;
+    height: 100%;
+    aspect-ratio: 2/1;
+}
+
+
+
+
+.addTerminalItem{
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 17%;
+    height: 90%;
+    align-items: center;
+    justify-content: center;
+}

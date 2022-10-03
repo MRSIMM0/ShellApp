@@ -1,0 +1,26 @@
+
+<databaseChangeLog
+
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="0" author="MRSIMM0">
+        <createTable tableName="shh-client">
+            <column name="id" type="bigint"><constraints primaryKey="true" primaryKeyName="ssh_id"></constraints></column>
+            <column name="username" type="varchar(255)"></column>
+            <column name="host" type="varchar(250)"></column>
+            <column name="user" type="varchar(250)"></column>
+            <column name="port" type="varchar(250)"></column>
+            <column name="password" type="varchar(250)"></column>
+            <column name="key" type="varchar(250)"></column>
+        </createTable>
+        <createSequence sequenceName="ssh_seq" incrementBy="1" startValue="1" ></createSequence>
+        <addAutoIncrement tableName="shh-client" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"></addAutoIncrement>
+    </changeSet>
+</databaseChangeLog>

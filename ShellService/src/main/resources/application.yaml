@@ -1,0 +1,32 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hibernate:
+        ddl-auto: none
+  jpa:
+    database-platform=org:
+        hibernate:
+          dialect:
+    show-sql: true
+  liquibase:
+    enabled: false
+    change-log: db/change-log.xml
+  application:
+    name: shell-service
+  cloud:
+    discovery:
+      enabled: true
+
+server:
+  port: 0
+simmo:
+  local:
+    address: http://localhost:8080
+

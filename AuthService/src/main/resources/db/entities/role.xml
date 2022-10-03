@@ -1,0 +1,26 @@
+<databaseChangeLog
+
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    <changeSet id="2" author="MRSIMM0">
+        <createTable tableName="role">
+            <column name="id" type="bigint">
+                <constraints primaryKeyName="roleId" nullable="false" primaryKey="true"></constraints>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="role_seq" incrementBy="1" startValue="1" ></createSequence>
+        <addAutoIncrement tableName="role" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"></addAutoIncrement>
+
+    </changeSet>
+
+</databaseChangeLog>

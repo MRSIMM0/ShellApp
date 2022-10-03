@@ -1,0 +1,35 @@
+<databaseChangeLog
+
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+<changeSet id="1" author="MRSIMM0">
+    <createTable tableName="usermodel">
+        <column name="id" type="bigint" >
+            <constraints primaryKey="true" primaryKeyName="userId" nullable="false" ></constraints>
+        </column>
+        <column name="username" type="varchar(255)">
+            <constraints nullable="false"></constraints>
+        </column>
+        <column name="password" type="varchar(255)">
+            <constraints nullable="false"></constraints>
+        </column>
+        <column name="email" type="varchar(255)">
+            <constraints nullable="false"></constraints>
+        </column>
+        <column name="active" type="boolean">
+            <constraints nullable="false"></constraints>
+        </column>
+    </createTable>
+
+    <createSequence sequenceName="user_seq" incrementBy="1" startValue="1"></createSequence>
+    <addAutoIncrement tableName="usermodel" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"></addAutoIncrement>
+
+</changeSet>
+
+</databaseChangeLog>
