@@ -2,11 +2,9 @@ package com.example.shellservce.Controllers;
 
 import com.example.shellservce.Entities.SSHClient;
 import com.example.shellservce.Entities.UserModel;
-import com.example.shellservce.Exceptions.ClientNotFoundException;
 import com.example.shellservce.SSHUtils.SSHUtils;
 import com.example.shellservce.Services.SSHService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -14,11 +12,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v1/client/ssh")
@@ -46,6 +42,8 @@ public class SSHController {
             SSHUtils utils = SSHUtils.builder()
                     .emitter(emitter)
                     .port(Integer.valueOf(client.getPort()))
+                    .keyLocation(client.getKey())
+                    .method(client.getMethod())
                     .username(client.getUser())
                     .password(client.getPassword())
                     .host(client.getHost()).build();
