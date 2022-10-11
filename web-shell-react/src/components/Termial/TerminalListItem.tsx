@@ -6,6 +6,7 @@ import {FiTrash,FiEdit2} from 'react-icons/fi'
 import {getAllClients} from "../../utils/endpoints"
 import {TbPlugConnected} from 'react-icons/tb'
 import { SSHClient } from '../SSHClient'
+import { getToken } from '../../utils/tokenUtils'
 
 
 interface props{
@@ -18,9 +19,11 @@ export default function TerminalListItem(props:props) {
 
     const del = (id:number)=>{
        if(id!==null && id !==undefined){
-
+        const requestHeaders: HeadersInit = new Headers();
+        requestHeaders.set('Authorization', `Bearer ${getToken()}`);
         fetch(`${getAllClients}${id}`,
-        {
+        {   
+            headers:requestHeaders,
             method:"DELETE"
         }
         )

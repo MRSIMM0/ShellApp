@@ -8,22 +8,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - '5432:5432'
+      - '5434:5434'
     volumes:
       - ssh-db:/var/lib/postgresql/data
     networks:
-      - ssh-db
+      - ssh
+    command:
+      - -p 5434
 
   ssh-liquid:
     container_name: ssh_liquid
     image: liquibase/liquibase
-    command: --changeLogFile=/change-log.xml update --url=jdbc:postgresql://ssh-db:5432/postgres --username=postgres --password=postgres
+    command: --changeLogFile=/change-log.xml update --url=jdbc:postgresql://ssh-db:5434/postgres --username=postgres --password=postgres
     volumes:
       - ./src/main/resources/db/change-log.xml:/liquibase/change-log.xml
       - ./src/main/resources/db/entities/:/liquibase/entities/
     networks:
-      - ssh-db
+      - ssh
 networks:
-   ssh-db:
+  ssh:
 volumes:
   ssh-db:

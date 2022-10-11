@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   discovery-server:
-    container_name: discoveryServer
+    container_name: shell-discoveryServer
     image: 'discovery-server:latest'
     build:
       context: ./DiscoveryServer
@@ -14,7 +14,7 @@ services:
       discovery-server:
 
   auth-db:
-    container_name: auth_db
+    container_name: shell-auth_db
     image: postgres:14.1-alpine
     environment:
         - POSTGRES_USER=postgres
@@ -27,7 +27,7 @@ services:
       auth-db:
 
   auth-liquibase:
-    container_name: auth-liquibase
+    container_name: shell-auth-liquibase
     depends_on:
       auth-db:
         condition: service_started
@@ -41,8 +41,9 @@ services:
     networks:
       auth-db:
 
+
   shell-db:
-    container_name: shell-db
+    container_name: shell-shell-db
     image: postgres:14.1-alpine
     environment:
       - POSTGRES_USER=postgres
@@ -59,7 +60,7 @@ services:
       shell-db:
 
   shell-liquibase:
-    container_name: shell-liquibase
+    container_name: shell-shell-liquibase
     depends_on:
       shell-db:
         condition: service_started
@@ -74,7 +75,7 @@ services:
       - shell-db
 
   shell-service:
-    container_name: shell-service
+    container_name: shell-shell-service
     image: 'shell-service:latest'
     build:
       context: ./ShellService
@@ -84,8 +85,12 @@ services:
       discovery-server:
         condition: service_started
     networks:
+      gateway:
+      auth:
       discovery-server:
       shell-db:
+    volumes:
+      - /home/
     environment:
         eureka.client.serviceUrl.defaultZone: http://discovery-server:8761/eureka
         spring.datasource.url: jdbc:postgresql://shell-db:5431/postgres
@@ -95,13 +100,15 @@ services:
     image: 'auth-service:latest'
     build:
       context: ./AuthService
-    container_name: auth-service
+    container_name: shell-auth-service
     depends_on:
       auth-liquibase:
          condition: service_started
       discovery-server:
         condition: service_started
     networks:
+      gateway:
+      auth:
       discovery-server:
       auth-db:
 
@@ -115,7 +122,7 @@ services:
       simmo.local.address: auth-service
 
   gateway:
-    container_name: gateway-service
+    container_name: shell-gateway-service
     image: 'gateway-service:latest'
     build:
       context: ./ApiGateway
@@ -134,6 +141,8 @@ services:
       eureka.client.register-with-eureka: 'true'
       eureka.instance.prefer-ip-address: 'true'
     networks:
+      gateway:
+      auth:
       discovery-server:
       front:
         ipv4_address: 172.21.0.5
@@ -146,9 +155,9 @@ services:
       args:
         - REACT_APP_HOST_IP_ADDRESS ${REACT_APP_HOST_IP_ADDRESS}
     command: npm run start
-    container_name: frontend
+    container_name: shell-frontend
     environment:
-      REACT_APP_HOST_IP_ADDRESS: = http://172.21.0.5:8080
+      REACT_APP_HOST_IP_ADDRESS: http://172.21.0.5:8080
     ports:
       - "3000:3000"
     volumes:
@@ -167,6 +176,9 @@ volumes:
     driver: local
 
 networks:
+  gateway:
+    driver: bridge
+  auth:
   shell-db:
   auth-db:
   discovery-server:

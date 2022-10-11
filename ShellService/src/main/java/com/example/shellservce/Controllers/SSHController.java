@@ -51,7 +51,6 @@ public class SSHController {
                     .host(client.getHost()).build();
             utils.connect();
             map.put(model.getBody(), utils);
-            System.out.println("dziala");
             return emitter;
         }   catch (Exception e) {
             return null;

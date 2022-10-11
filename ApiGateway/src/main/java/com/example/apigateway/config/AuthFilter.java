@@ -44,7 +44,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                         .uri("http://auth-service/api/v1/auth/validate")
                         .header(HttpHeaders.AUTHORIZATION, parts[1])
                         .retrieve()
-                        .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new Throwable("Method not allowed. Please check the URL.")))
+                        .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new Throwable(response.toString())))
                         .bodyToMono(UserModelDTO.class)
                         .map(userDto -> {
                            ServerHttpRequest request = exchange.getRequest()

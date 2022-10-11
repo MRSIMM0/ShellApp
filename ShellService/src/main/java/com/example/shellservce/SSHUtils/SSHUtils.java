@@ -71,7 +71,6 @@ public class SSHUtils {
             this.outputStream = pipedOutputStream;
 
             PipedInputStream pipedInputStream1 = new PipedInputStream();
-            PipedOutputStream pipedOutputStream1 = new PipedOutputStream(pipedInputStream1);
 
             this.inputStream = pipedInputStream1;
 

@@ -12,5 +12,11 @@ export interface SSHClient{
 
     password:String|null;
 
-    privateKey:String|null;
+    key:String | null;
+
+    method: Method | null
+}
+
+export enum Method{
+    password,key
 }

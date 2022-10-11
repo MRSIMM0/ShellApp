@@ -33,5 +33,7 @@ public class SSHClient {
 
     private String key;
 
+    private Method method;
+
 
 }
