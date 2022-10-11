@@ -1,10 +1,8 @@
 package com.example.shellservce.SSHUtils;
 
 import com.example.shellservce.Controllers.SSHController;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.example.shellservce.Entities.Method;
+import com.jcraft.jsch.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -25,37 +23,36 @@ public class SSHUtils {
     private String  username; // your username
     private String password; // your username's password
 
+    private String keyLocation;
     private String host; // your remote server address
     private int port; // your remote server port
 
     private SseEmitter emitter;
 
-    public SSHUtils(String username, String password, String host, int port,SseEmitter emitter) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
-        this.port = port;
-        this.emitter = emitter;
-    }
+    private Method method;
 
 
 
     public void connect() {
 
         try {
-            session = new JSch().getSession(username, host, port);
+            JSch jSch = new JSch();
+            if(method.equals(Method.key)){
+                jSch.addIdentity(keyLocation);
+            }
 
-            session.setPassword(password);
+            session = jSch.getSession(username, host, port);
 
-            session.setConfig("StrictHostKeyChecking", "no");
+            if(method.equals(Method.password)){
+                session.setPassword(password);
+                session.setConfig("StrictHostKeyChecking", "no");
+            }
 
             session.connect();
 
             System.out.println("Session connected:" + session.isConnected());
 
             Channel channel = session.openChannel("shell");
-
-
 
             OutputStream outputStream = new OutputStream() {
                 @Override
